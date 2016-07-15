@@ -9,11 +9,8 @@ class Base
     end
 
 
-      def create_table(table_name, options= {})
-
-          change do |t|
-            yield t
-          end
+      def create_table(table_name, &block)
+        yield
 
 
           # create = "CREATE TABLE #{table_name} (#{a});"
