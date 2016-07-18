@@ -1,4 +1,4 @@
-require './simpletable'
+require './easylib/simpletable'
 class Base
   DATABASE_NAME = 'task'
 
