@@ -15,7 +15,7 @@ module TableImage
 
     def initialize(table_name)
       @table_name = table_name
-      @table_query = "CREATE TABLE #{table_name} ("
+      @table_query = "CREATE TABLE #{table_name} (id serial PRIMARY KEY, "
     end
 
     def full_table_query
@@ -33,7 +33,7 @@ end
 class Base
   include TableImage
 
-  DATABASE_NAME = 'task'
+  DATABASE_NAME = 'orm'
 
   def initialize
     @conn = PG::Connection.new(:dbname => DATABASE_NAME)
@@ -52,9 +52,9 @@ class CreateCars < Base
   def change
     create_table :cars do |t|
       t.integer :max_speed
-      t.text :description
-      t.text :name
-      t.text :model
+      t.text    :description
+      t.text    :name
+      t.text    :model
       t.boolean :is_stock
     end
   end
