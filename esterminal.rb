@@ -1,43 +1,12 @@
 require './easylib/autoload'
 class ESTerminal
 
-#===================================================================================
-  def self.update_migrate
-    #считываем директорию с миграциями
-      table = ''
-      d = Dir.new("./migrate")
-      d.entries.each do |e|
-        next if e =~ /^\./
-        file=File.join(d.path, e)
-        #меняем migrate по названию
-        x = 0
-
-        file.split(/[,_\. ]+/).each do |i|
-          if x==3
-            table<<i
-            x += 1
-          else x += 1
-          end
-        end
-        f = File.write(file, "
-class #{table.capitalize}<Base
-  def change
-    create_table :#{table} do |t|
-
-    end
-  end
-end")
-      table = ''
-      end
-  end
-#========================================================================================
-#КОМАНДЫ EasyORM=========================================================================
   loop do
   print "Введите команду: "
   command = gets.strip
     case command
       when 'dbc', 'db create'
-        EasyORM.create
+        EasyOrm.create_db
       when 'dbn', 'db new'
         if Dir.exists?("migrate")
           Dir.chdir("migrate") do
@@ -50,11 +19,39 @@ end")
           end
         end
       when 'dbu', 'db update'
-        ESTerminal.update_migrate
+        EasyOrm.update_migrate
+
+      #Create column
+      when 'ccn'
+                    #INSERT INTO cars(name, speed) VALUES('audi', 250)
+        EasyOrm.create_column('cars',name: 'audi', speed: 250)
+
+        # Update column
+      when 'updc'
+                    #UPDATE cars SET speed = 400 WHERE name = 'audi'
+        EasyOrm.update_column('cars',speed: 400, where: '',name: 'audi')
+
+      #Find column
+      when 'find'
+                    #SELECT * FROM cars;
+        EasyOrm.find_column('cars',:*)
+
+      #Delete column
+      when 'delete'
+                    #DELETE FROM cars WHERE name = 'audi'
+        EasyOrm.delete('cars',name: 'audi')
+
       when 'help', 'dbh'
         puts 'dbn:                Create a new database migrate files'
         puts 'dbu:                Update migrate files'
         puts 'dbc:                Create tables for database'
+        puts 'ccn:                Create column'
+        puts 'updc:               Update column'
+        puts 'find:               Find column'
+        puts 'delete:             Delete column'
+        puts 'exit:               Type for exit'
+      when 'exit'
+        exit
 
     end
   command = ''
